@@ -117,23 +117,23 @@ class HPF():
                 pbar.set_description(f"HPF Train MSE: {np.round(self.train_error[-1], 4)} - Progress")
 
 
-    
+
     def __initialize_variational_params(self):
         # phi: (U X I X K) matrix of variational parameters for the multinomial
         self.phi = np.zeros(shape=[self.U, self.I, self.K])
 
         #variational parameter random initialization
-        # k_rte: (U X 1) array
-        self.kappa_rte = (np.random.rand(self.U) + 1) * self.a_1
-        # tau_rte: (I X 1) array
-        self.tau_rte = (np.random.rand(self.I) + 1) * self.c_1
+        # k_rte: (U X 1) array - a_1's with small offset
+        self.kappa_rte = (np.random.uniform(-0.3, 0.3, size=self.U) + 1) * self.a_1
+        # tau_rte: (I X 1) array - c_1's with small offset
+        self.tau_rte = (np.random.uniform(-0.3, 0.3, size=self.I) + 1) * self.c_1
 
         # gamma_shp, gamma_rte: (U X K) numpy arrays
         self.gamma_shp = np.random.gamma(shape=self.a_1, scale=(self.b_1/self.a_1), size=(self.U, self.K))
-        self.gamma_rte = (np.random.rand(self.U, self.K) + 1) * self.a
+        self.gamma_rte = (np.random.uniform(-0.3, 0.3, size=(self.U, self.K)) + 1) * self.a
         # lambda_shp, lambda_rte: (I X K) numpy arrays
         self.lambda_shp = np.random.gamma(shape=self.c_1, scale=(self.c_1/self.d_1), size=(self.I, self.K))
-        self.lambda_rte = (np.random.rand(self.I, self.K) + 1) * self.c
+        self.lambda_rte = (np.random.uniform(-0.3, 0.3, size=(self.I, self.K)) + 1) * self.c
 
         # k_shp, tau_shp intialization rules come from the CAVI algorithm and do not need to be updated at each iteration.
         # these values are constant for each u, i respectively, so they are a scalar.
